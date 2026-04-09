@@ -55,7 +55,8 @@ router.post('/', protect, async (req, res) => {
 
     // 2. Try Advanced ML Service
     try {
-      const mlResponse = await axios.post('http://127.0.0.1:8000/predict-leakage', {
+      const mlUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000';
+      const mlResponse = await axios.post(`${mlUrl}/predict-leakage`, {
         amount: Number(amount),
         category: category,
         is_subscription: Boolean(isSubscription)
