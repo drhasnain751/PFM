@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: 99 102 241;
+    --secondary: 168 85 247;
+    --bg-dark: 15 23 42;
+  }
+  
+  body {
+    @apply bg-slate-900 text-slate-100 antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-2xl;
+  }
+  
+  .glass-card {
+    @apply bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-xl hover:border-indigo-500/50 transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-lg shadow-indigo-600/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2;
+  }
+
+  .btn-outline {
+    @apply px-6 py-2.5 border border-slate-700 hover:bg-slate-800 text-slate-200 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all text-slate-200 placeholder:text-slate-500;
+  }
+
+  .nav-link {
+    @apply text-slate-400 hover:text-white font-medium transition-colors;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200;
+  }
+
+  .sidebar-link-active {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-white bg-indigo-600/10 border border-indigo-600/20 transition-all duration-200;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400;
+  }
+
+  .section-subtitle {
+    @apply text-slate-400 text-center max-w-2xl mx-auto mb-12;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
