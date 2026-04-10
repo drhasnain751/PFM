@@ -29,7 +29,11 @@
       "destination": "server/src/index.js"
     },
     {
-      "source": "/((?!api|ml|uploads).*)",
+      "source": "/assets/(.*)",
+      "destination": "client/assets/$1"
+    },
+    {
+      "source": "/((?!api|ml|uploads|assets).*)",
       "destination": "client/index.html"
     }
   ],
