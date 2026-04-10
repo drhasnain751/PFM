@@ -12,7 +12,21 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+const uploadsPath = process.env.VERCEL 
+    ? path.join('/tmp', 'uploads') 
+    : path.join(__dirname, '..', 'uploads');
+
+const fs = require('fs');
+if (!fs.existsSync(uploadsPath)) {
+    try {
+        fs.mkdirSync(uploadsPath, { recursive: true });
+    } catch (e) {
+        console.error('Could not create uploads directory:', e);
+    }
+}
+
+app.use('/uploads', express.static(uploadsPath));
 
 // Routes will be imported here
 const authRoutes = require('./routes/auth');

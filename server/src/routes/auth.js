@@ -8,8 +8,12 @@ const { readDB, writeDB } = require('../db');
 const router = express.Router();
 
 // Multer Config
+const uploadsPath = process.env.VERCEL 
+    ? path.join('/tmp', 'uploads') 
+    : path.join(__dirname, '..', '..', 'uploads');
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
+  destination: (req, file, cb) => cb(null, uploadsPath),
   filename: (req, file, cb) => cb(null, `avatar-${Date.now()}${path.extname(file.originalname)}`),
 });
 const upload = multer({ storage });

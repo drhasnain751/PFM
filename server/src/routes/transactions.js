@@ -3,8 +3,13 @@ const multer = require('multer');
 const csv = require('csv-parser');
 const fs = require('fs');
 
+const path = require('path');
+const uploadsPath = process.env.VERCEL 
+    ? path.join('/tmp', 'uploads') 
+    : path.join(__dirname, '..', '..', 'uploads');
+
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: uploadsPath });
 
 // Middleware to protect routes
 const protect = async (req, res, next) => {
