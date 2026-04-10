@@ -1,21 +1,36 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "server/src/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "ml-service/main.py",
+      "use": "@vercel/python"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/server/src/index.js"
+      "destination": "server/src/index.js"
     },
     {
       "source": "/ml/(.*)",
-      "destination": "/ml-service/main.py"
+      "destination": "ml-service/main.py"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "/server/src/index.js"
+      "destination": "server/src/index.js"
     },
     {
       "source": "/((?!api|ml|uploads).*)",
-      "destination": "/client/$1"
+      "destination": "client/index.html"
     }
   ],
   "cleanUrls": true

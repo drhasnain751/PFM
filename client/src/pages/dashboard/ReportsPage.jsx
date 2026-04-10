@@ -46,6 +46,28 @@ export default function ReportsPage() {
 
   const COLORS = ['#6366f1', '#a855f7', '#ec4899', '#f43f5e', '#ef4444', '#f59e0b', '#10b981'];
 
+  const downloadCSV = () => {
+    if (filteredTransactions.length === 0) return;
+    const headers = ['ID', 'Date', 'Category', 'Amount', 'Prediction', 'Risk Score'];
+    const rows = filteredTransactions.map(t => [
+        t._id,
+        new Date(t.date).toLocaleDateString(),
+        t.category,
+        t.amount,
+        t.prediction,
+        t.riskScore
+    ]);
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `pfm_report_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -53,8 +75,12 @@ export default function ReportsPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Detailed Reports</h1>
           <p className="text-slate-400">Advanced analysis of your transaction distributions and risks.</p>
         </div>
-        <button className="btn-outline flex items-center gap-2">
-           <Download className="w-5 h-5" /> Export Data (CSV)
+        <button 
+          onClick={downloadCSV}
+          disabled={filteredTransactions.length === 0}
+          className="btn-outline flex items-center gap-2 group hover:bg-indigo-600 hover:text-white transition-all"
+        >
+           <Download className="w-5 h-5 group-hover:scale-110 transition-transform" /> Export Data (CSV)
         </button>
       </div>
 
