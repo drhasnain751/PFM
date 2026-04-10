@@ -87,8 +87,8 @@ export default function Overview() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Welcome back, {user?.name || 'User'}!</h1>
-          <p className="text-slate-400">Here's an overview of your financial health today.</p>
+          <h1 className="text-2xl md:text-3xl font-bold mb-1">Welcome back, {user?.name || 'User'}!</h1>
+          <p className="text-slate-500">Here's an overview of your financial health today.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -110,8 +110,8 @@ export default function Overview() {
             <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center mb-4`}>
                <stat.icon className={`w-6 h-6 ${stat.color}`} />
             </div>
-            <p className="text-slate-400 text-sm font-medium mb-1">{stat.label}</p>
-            <p className="text-2xl font-bold text-white tracking-tight">{stat.value}</p>
+            <p className="text-slate-500 text-sm font-medium mb-1">{stat.label}</p>
+            <p className="text-2xl font-bold tracking-tight">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -120,7 +120,7 @@ export default function Overview() {
         {/* Main Spending Trend */}
         <div className="lg:col-span-2 glass-panel p-8">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-bold text-white">Daily Spending Trend</h3>
+            <h3 className="text-xl font-bold">Daily Spending Trend</h3>
             <span className="text-xs font-semibold px-2 py-1 rounded bg-slate-800 text-slate-400">Last 7 Days</span>
           </div>
           <div className="h-[300px] w-full">
@@ -146,7 +146,7 @@ export default function Overview() {
 
         {/* Category Distribution */}
         <div className="glass-panel p-8">
-          <h3 className="text-xl font-bold text-white mb-8">Spending by Category</h3>
+          <h3 className="text-xl font-bold mb-8">Spending by Category</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical">
@@ -165,7 +165,7 @@ export default function Overview() {
         {/* Transactions list */}
         <div className="lg:col-span-2 glass-panel p-8">
           <div className="flex items-center justify-between mb-8">
-             <h3 className="text-xl font-bold text-white">Recent Activity</h3>
+             <h3 className="text-xl font-bold">Recent Activity</h3>
              <Link to="/dashboard/reports" className="text-indigo-400 hover:text-indigo-300 text-sm font-bold flex items-center gap-1">
                View All <ArrowRight className="w-4 h-4" />
              </Link>
@@ -183,8 +183,8 @@ export default function Overview() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {transactions.slice(0, 5).map((tx) => (
-                  <tr key={tx._id} className="group hover:bg-white/[0.02] transition-colors">
-                    <td className="py-4 px-4 text-white font-medium">Transaction #{tx._id.slice(-4)}</td>
+                  <tr key={tx._id} className="group hover:bg-black/5 transition-colors">
+                    <td className="py-4 px-4 font-medium">Transaction #{tx._id.slice(-4)}</td>
                     <td className="py-4 px-4">
                        <span className="px-2 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 text-xs font-bold border border-indigo-500/20">
                           {tx.category}
@@ -193,7 +193,7 @@ export default function Overview() {
                     <td className="py-4 px-4 text-slate-400 text-sm">
                        {new Date(tx.date).toLocaleDateString()}
                     </td>
-                    <td className="py-4 px-4 text-white font-bold">
+                    <td className="py-4 px-4 font-bold">
                        ${Number(tx.amount).toFixed(2)}
                     </td>
                     <td className="py-4 px-4">
@@ -218,7 +218,7 @@ export default function Overview() {
         <div className="glass-panel p-8 bg-gradient-to-br from-slate-900 to-indigo-900/10 border-indigo-500/10">
            <div className="flex items-center gap-2 mb-8">
               <AlertTriangle className="w-6 h-6 text-rose-500" />
-              <h3 className="text-xl font-bold text-white">Leakage Alerts</h3>
+              <h3 className="text-xl font-bold">Leakage Alerts</h3>
            </div>
            
            <div className="space-y-4">
@@ -234,7 +234,7 @@ export default function Overview() {
                         <AlertTriangle className="w-4 h-4 text-rose-500" />
                      </div>
                      <div>
-                        <p className="text-sm font-bold text-white mb-1">High Risk Detected</p>
+                        <p className="text-sm font-bold mb-1">High Risk Detected</p>
                         <p className="text-xs text-rose-300 opacity-60">
                            {alert.category} spike of ${alert.amount.toFixed(2)} flagged as anomalous.
                         </p>

@@ -1,9 +1,10 @@
-const express = require('express');
-const axios = require('axios');
-const jwt = require('jsonwebtoken');
 const { readDB, writeDB } = require('../db');
+const multer = require('multer');
+const csv = require('csv-parser');
+const fs = require('fs');
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
 
 // Middleware to protect routes
 const protect = async (req, res, next) => {
@@ -87,6 +88,67 @@ router.post('/', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error: ' + error.message });
   }
+});
+
+router.post('/upload', protect, upload.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+
+  const results = [];
+  const transactions = [];
+  const db = readDB();
+
+  fs.createReadStream(req.file.path)
+    .pipe(csv())
+    .on('data', (data) => results.push(data))
+    .on('end', async () => {
+      try {
+        for (const row of results) {
+          const amount = Number(row.Amount || row.amount);
+          const category = row.Category || row.category || 'Uncategorized';
+          const isSubscription = Boolean(row.IsSubscription || row.is_subscription);
+          const date = row.Date || row.date || new Date().toISOString();
+
+          let predictionData = { prediction: 'Normal', risk_score: 0, confidence_score: 0 };
+          
+          // Heuristic fallback
+          if (amount > 500) predictionData = { prediction: 'Risky', risk_score: 85, confidence_score: 0.9 };
+          
+          // Try ML
+          try {
+            const mlUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000';
+            const mlResponse = await axios.post(`${mlUrl}/predict-leakage`, {
+              amount,
+              category,
+              is_subscription: isSubscription
+            });
+            predictionData = mlResponse.data;
+          } catch (mlErr) {}
+
+          const newTx = {
+            _id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+            user: req.user.id,
+            amount,
+            category,
+            isSubscription,
+            date,
+            prediction: predictionData.prediction,
+            riskScore: Number(predictionData.risk_score || predictionData.riskScore),
+            confidenceScore: Number(predictionData.confidence_score || predictionData.confidenceScore)
+          };
+          transactions.push(newTx);
+          db.transactions.push(newTx);
+        }
+
+        writeDB(db);
+        fs.unlinkSync(req.file.path); // Clean up
+        res.status(201).json({ 
+          message: `${transactions.length} transactions processed`,
+          transactions 
+        });
+      } catch (err) {
+        res.status(500).json({ message: 'Error processing CSV: ' + err.message });
+      }
+    });
 });
 
 module.exports = router;

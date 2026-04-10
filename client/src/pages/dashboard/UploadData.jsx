@@ -1,20 +1,54 @@
 import React, { useState } from 'react';
-import { Upload, FileText, CheckCircle2, AlertCircle, X, Shield, ArrowRight } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, AlertCircle, X, Shield, ArrowRight, Download, BarChart3, TrendingUp } from 'lucide-react';
+import { uploadTransactions } from '../../api';
+import { Link } from 'react-router-dom';
 
 export default function UploadData() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!file) return;
     setUploading(true);
-    // Simulate upload
-    setTimeout(() => {
-      setUploading(false);
+    setError('');
+    
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const { data } = await uploadTransactions(formData);
+      setAnalysisResults(data.transactions);
       setSuccess(true);
       setFile(null);
-    }, 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Upload failed. Ensure file is a valid CSV.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const downloadSummary = () => {
+    if (!analysisResults) return;
+    const headers = ['Date', 'Category', 'Amount', 'Prediction', 'Risk Score'];
+    const rows = analysisResults.map(t => [
+        new Date(t.date).toLocaleDateString(),
+        t.category,
+        t.amount,
+        t.prediction,
+        t.riskScore
+    ]);
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "financial_analysis_summary.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -93,37 +127,56 @@ export default function UploadData() {
         </div>
 
         <div className="space-y-6">
-           <div className="glass-panel p-6 bg-indigo-600/10 border-indigo-500/20">
-              <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-indigo-400" />
-                Best Practices
-              </h4>
-              <ul className="space-y-4 text-sm text-slate-400">
-                 <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">•</span>
-                    Ensure the Date, Amount, and Category columns are present.
-                 </li>
-                 <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">•</span>
-                    Export your statement from your banking portal directly.
-                 </li>
-                 <li className="flex gap-2">
-                    <span className="text-indigo-400 font-bold">•</span>
-                    Maximum file length is limited to 1,000 transactions.
-                 </li>
-              </ul>
-           </div>
+           {error && (
+              <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-sm flex items-start gap-2 animate-in slide-in-from-right">
+                 <AlertCircle className="w-5 h-5 shrink-0" />
+                 {error}
+              </div>
+           )}
 
-           {success && (
-              <div className="glass-panel p-6 bg-emerald-500/10 border-emerald-500/20 animate-in slide-in-from-right duration-500">
-                <h4 className="text-lg font-bold text-emerald-400 mb-2">Success!</h4>
-                <p className="text-sm text-slate-400 mb-6 leading-relaxed">
-                   Your statement was processed and AI models were successfully trained on your new data.
-                </p>
-                <Link to="/dashboard" className="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 text-sm underline group">
-                   View Dashboard Results <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <button onClick={() => setSuccess(false)} className="mt-6 text-xs text-slate-500 hover:text-white uppercase tracking-widest font-bold">Close Notification</button>
+           {success && analysisResults && (
+              <div className="glass-panel p-8 bg-indigo-500/5 border-indigo-500/20 animate-in slide-in-from-right duration-500">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                        <CheckCircle2 className="w-8 h-8" />
+                    </div>
+                    <div>
+                        <h4 className="text-xl font-bold">Analysis Ready</h4>
+                        <p className="text-sm text-slate-500">Processed {analysisResults.length} records</p>
+                    </div>
+                </div>
+
+                <div className="space-y-4 mb-8">
+                    <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-[rgb(var(--border-color))]">
+                        <div className="flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 text-rose-500" />
+                            <span className="text-sm">Risky Transactions</span>
+                        </div>
+                        <span className="font-bold text-rose-500">{analysisResults.filter(t => t.prediction === 'Risky').length}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-[rgb(var(--border-color))]">
+                        <div className="flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-indigo-500" />
+                            <span className="text-sm">Total Amount Processed</span>
+                        </div>
+                        <span className="font-bold">${analysisResults.reduce((acc, t) => acc + t.amount, 0).toFixed(2)}</span>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    <button 
+                      onClick={downloadSummary}
+                      className="btn-primary w-full py-3"
+                    >
+                       <Download className="w-4 h-4" /> Download Full Summary
+                    </button>
+                    <Link 
+                      to="/dashboard" 
+                      className="btn-outline w-full py-3 group"
+                    >
+                       Go to Overview <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </div>
               </div>
            )}
         </div>

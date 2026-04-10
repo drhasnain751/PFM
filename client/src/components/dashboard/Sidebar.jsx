@@ -36,8 +36,8 @@ export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
 
       {/* Sidebar Container */}
       <aside className={`
-        fixed left-0 top-0 bottom-0 z-50 w-72 bg-slate-900 border-r border-white/5 
-        transition-transform duration-300 ease-in-out
+        fixed left-0 top-0 bottom-0 z-50 w-72 bg-[rgb(var(--bg-main))] border-r border-[rgb(var(--border-color))] 
+        transition-all duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div className="flex flex-col h-full h-screen">
@@ -46,7 +46,7 @@ export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
                 <Shield className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white tracking-tight">PFM AI</span>
+              <span className="text-xl font-bold tracking-tight">PFM AI</span>
             </Link>
             <button 
               onClick={() => setIsOpen(false)}
@@ -70,7 +70,7 @@ export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
             ))}
           </nav>
 
-          <div className="p-4 border-t border-white/5">
+          <div className="p-4 border-t border-[rgb(var(--border-color))]">
             <button 
               onClick={logoutContext}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-400/5 hover:text-rose-300 transition-all duration-200"
