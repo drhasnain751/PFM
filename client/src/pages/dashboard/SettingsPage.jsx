@@ -56,6 +56,8 @@ export default function SettingsPage() {
         const { data } = await updateProfile({ avatarUrl: url });
         updateUser(data);
         setShowAvatarPicker(false);
+        setSuccess('Avatar updated successfully!');
+        setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
         setError('Avatar update failed');
     } finally {
@@ -75,6 +77,8 @@ export default function SettingsPage() {
         const { data } = await updateProfile(formData);
         updateUser(data);
         setShowAvatarPicker(false);
+        setSuccess('Avatar uploaded successfully!');
+        setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
         setError('Upload failed');
     } finally {
