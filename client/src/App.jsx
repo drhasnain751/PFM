@@ -63,7 +63,7 @@ const AppContent = () => {
     </Router>
   );
 };
-
+export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
