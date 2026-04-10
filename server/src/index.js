@@ -13,6 +13,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Request logger for debugging 404s
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
+
 const uploadsPath = process.env.VERCEL 
     ? path.join('/tmp', 'uploads') 
     : path.join(__dirname, '..', 'uploads');
