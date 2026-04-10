@@ -30,7 +30,7 @@
     },
     {
       "source": "/((?!api|ml|uploads).*)",
-      "destination": "client/index.html"
+      "destination": "/index.html"
     }
   ],
   "cleanUrls": true
