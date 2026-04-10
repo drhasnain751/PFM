@@ -1,9 +1,10 @@
-import React from 'react';
-import { Zap, Lightbulb, TrendingDown, ArrowUpRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Zap, Lightbulb, TrendingDown, ArrowUpRight, CheckCircle2, AlertCircle, X } from 'lucide-react';
 
 export default function InsightsPage() {
-  const recommendations = [
+  const [recommendations, setRecommendations] = useState([
     {
+      id: 1,
       title: 'Optimize Subscription Leakage',
       desc: "Our models detected 3 streaming services with no usage in 60 days. Cancelling could save $42.50/mo.",
       impact: 'High',
@@ -13,6 +14,7 @@ export default function InsightsPage() {
       bg: 'bg-rose-400/10'
     },
     {
+      id: 2,
       title: 'Dining Efficiency',
       desc: "You spend 40% more on Dining than the average user in your income bracket. Try meal prepping 2 more days/week.",
       impact: 'Medium',
@@ -22,6 +24,7 @@ export default function InsightsPage() {
       bg: 'bg-amber-400/10'
     },
     {
+      id: 3,
       title: 'Emergency Fund Boost',
       desc: "By rounding up your transactions to the nearest dollar, you could reach your milestone 3 months earlier.",
       impact: 'Medium',
@@ -30,7 +33,11 @@ export default function InsightsPage() {
       color: 'text-indigo-400',
       bg: 'bg-indigo-400/10'
     }
-  ];
+  ]);
+
+  const dismissInsight = (id) => {
+    setRecommendations(prev => prev.filter(item => item.id !== id));
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700">
@@ -40,46 +47,67 @@ export default function InsightsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {recommendations.map((item, i) => (
-          <div key={i} className="glass-panel p-8 flex flex-col md:flex-row gap-8 hover:bg-white/5 transition-colors cursor-default">
-            <div className={`w-16 h-16 rounded-2xl ${item.bg} flex items-center justify-center ${item.color} shrink-0`}>
-              <item.icon className="w-8 h-8" />
-            </div>
-            
-            <div className="flex-1 space-y-4">
-              <div className="flex items-center justify-between">
-                 <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                 <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest ${
-                   item.impact === 'High' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400'
-                 }`}>
-                   {item.impact} Impact
-                 </span>
+        {recommendations.length === 0 ? (
+           <div className="glass-panel p-20 text-center animate-in zoom-in-95">
+              <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 mx-auto mb-6">
+                 <CheckCircle2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">You're All Caught Up!</h3>
+              <p className="text-slate-500">No new insights found. Check back later after more transactions.</p>
+           </div>
+        ) : (
+          recommendations.map((item) => (
+            <div key={item.id} className="glass-panel p-8 flex flex-col md:flex-row gap-8 hover:bg-white/5 transition-colors cursor-default relative group animate-in slide-in-from-right-4">
+              <button 
+                onClick={() => dismissInsight(item.id)}
+                className="absolute top-4 right-4 p-2 text-slate-500 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all"
+                title="Dismiss"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className={`w-16 h-16 rounded-2xl ${item.bg} flex items-center justify-center ${item.color} shrink-0 group-hover:scale-110 transition-transform`}>
+                <item.icon className="w-8 h-8" />
               </div>
               
-              <p className="text-slate-400 leading-relaxed">
-                {item.desc}
-              </p>
-
-              <div className="flex items-center gap-6 pt-2">
-                 <button className="text-sm font-bold text-indigo-400 flex items-center gap-1 hover:text-white transition-colors">
-                    Analyze More <ArrowUpRight className="w-4 h-4" />
-                 </button>
-                 <button className="text-sm font-bold text-slate-500 flex items-center gap-1 hover:text-white transition-colors">
-                    Dismiss
-                 </button>
+              <div className="flex-1 space-y-4">
+                <div className="flex items-center justify-between">
+                   <h3 className="text-xl font-bold text-white pr-8">{item.title}</h3>
+                   <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest hidden sm:block ${
+                     item.impact === 'High' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400'
+                   }`}>
+                     {item.impact} Impact
+                   </span>
+                </div>
+                
+                <p className="text-slate-400 leading-relaxed max-w-2xl">
+                  {item.desc}
+                </p>
+  
+                <div className="flex items-center gap-6 pt-2">
+                   <button className="text-sm font-bold text-indigo-400 flex items-center gap-1 hover:text-white transition-colors">
+                      Detailed Analysis <ArrowUpRight className="w-4 h-4" />
+                   </button>
+                   <button 
+                    onClick={() => dismissInsight(item.id)}
+                    className="text-sm font-bold text-slate-500 flex items-center gap-1 hover:text-white transition-colors"
+                   >
+                      Ignore Recommendation
+                   </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
-      <div className="glass-panel p-8 bg-indigo-600/5 text-center">
+      <div className="glass-panel p-8 bg-indigo-600/5 text-center border-indigo-500/20">
          <div className="w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 mx-auto mb-4">
-            <CheckCircle2 className="w-6 h-6" />
+            <Lightbulb className="w-6 h-6" />
          </div>
-         <h4 className="text-lg font-bold mb-2">You're doing great!</h4>
+         <h4 className="text-lg font-bold mb-2">Did you know?</h4>
          <p className="text-sm text-slate-500 max-w-sm mx-auto">
-            Overall financial efficiency is up 12% compared to last month. Keep following your AI tips.
+            Overall financial efficiency is up 12% compared to last month. Keep following your AI tips to reach your goals faster.
          </p>
       </div>
     </div>

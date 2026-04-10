@@ -29,36 +29,12 @@
       "destination": "server/src/index.js"
     },
     {
-      "source": "/dashboard/budgets",
-      "destination": "/client/index.html"
+      "source": "/assets/(.*)",
+      "destination": "/client/assets/$1"
     },
     {
-      "source": "/dashboard/goals",
+      "source": "/((?!api|ml|uploads|assets).*)",
       "destination": "/client/index.html"
-    },
-    {
-      "source": "/dashboard/insights",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/dashboard/(.*)",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/settings",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/reports",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/upload",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/((?!api|ml|uploads|client).*)",
-      "destination": "/client/$1"
     }
   ],
   "cleanUrls": true
