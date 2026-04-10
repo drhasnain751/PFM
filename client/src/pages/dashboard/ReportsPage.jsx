@@ -70,15 +70,15 @@ export default function ReportsPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Detailed Reports</h1>
-          <p className="text-slate-400">Advanced analysis of your transaction distributions and risks.</p>
+          <p className="text-slate-400 text-sm">Advanced analysis of your transaction distributions and risks.</p>
         </div>
         <button 
           onClick={downloadCSV}
           disabled={filteredTransactions.length === 0}
-          className="btn-outline flex items-center gap-2 group hover:bg-indigo-600 hover:text-white transition-all"
+          className="btn-outline flex items-center justify-center gap-2 px-6 py-3 w-full sm:w-auto shrink-0 group hover:bg-indigo-600 hover:text-white transition-all shadow-lg"
         >
            <Download className="w-5 h-5 group-hover:scale-110 transition-transform" /> Export Data (CSV)
         </button>

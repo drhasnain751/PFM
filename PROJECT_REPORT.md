@@ -1,93 +1,90 @@
-# Project Report: Early Detection of Personal Financial Leakage (PFM AI)
+# PFM AI - Personal Financial Models
 
-## 1. Project Overview
-**PFM AI** is a professional full-stack application designed to identify "financial leakage"—unusual spending, dormant subscriptions, and anomalous transactions—using localized Machine Learning models. The system provides a SaaS-like experience for personal financial security.
+PFM AI is a state-of-the-art SaaS platform designed to detect financial leakage, anomalous spending, and risk patterns using Machine Learning. It provides users with a premium dashboard to manage transactions, set budgets, track savings goals, and receive AI-driven financial insights.
+
+![Dashboard Preview](https://via.placeholder.com/1200x600?text=PFM+AI+Dashboard+Overview)
+
+## 🌟 Key Features
+
+- **ML-Powered Analysis**: Automated detection of risky transactions and spending anomalies.
+- **Bulk Data Ingestion**: Upload CSV files for instant historical analysis.
+- **Visual Analytics**: Interactive charts (Recharts) for category distribution and spending trends.
+- **Budget Management**: Set and track monthly spending limits across categories.
+- **Savings Goals**: Track milestones for your long-term financial objectives.
+- **Premium UI**: Ultra-responsive, modern glassmorphic design with system-wide Dark/Light modes.
+- **Secure Auth**: Full authentication system with persistent session management.
+
+## 🛠️ Technology Stack
+
+- **Frontend**: React.js, Tailwind CSS, Lucide Icons, Recharts, Framer Motion (animations).
+- **Backend**: Node.js (Express), Serverless logic, JWT Authentication.
+- **ML Service**: Python (FastAPI/Flask), Scikit-Learning (Isolation Forest for anomaly detection).
+- **Storage**: Local JSON Database (Production-ready for MongoDB migration).
+- **Deployment**: Vercel (Edge Functions).
 
 ---
 
-## 2. System Architecture
-The application follows a modular, decoupled architecture consisting of three primary services:
+## 🚀 Local Setup Guide
 
-```mermaid
-graph TD
-    User((User)) <--> Frontend[React Frontend - Port 5173]
-    Frontend <--> Backend[Node.js Express Server - Port 5000]
-    Backend <--> ML[FastAPI ML Service - Port 8000]
-    Backend <--> DB[(Local JSON DB - db.json)]
+Follow these steps to download and run the project locally on your machine.
+
+### 1. Prerequisites
+Ensure you have the following installed:
+- **Node.js**: v18.0 or higher ([Download](https://nodejs.org/))
+- **Python**: v3.10 or higher ([Download](https://www.python.org/))
+- **Git**: (Optional) For cloning the repository.
+
+### 2. Download & Extraction
+1. Download the project zip or clone the repository:
+   ```bash
+   git clone https://github.com/drhasnain751/PFM.git
+   cd PFM
+   ```
+
+### 3. Installation & Setup
+
+#### A. Backend (Server)
+Navigate to the `server` folder and install dependencies:
+```bash
+cd server
+npm install
 ```
 
----
+#### B. Frontend (Client)
+Navigate to the `client` folder and install dependencies:
+```bash
+cd ../client
+npm install
+```
 
-## 3. Technical Specification
+#### C. ML Service (Python)
+Navigate to the `ml-service` folder and set up the Python environment:
+```bash
+cd ../ml-service
+pip install -r requirements.txt
+```
 
-### 3.1 Frontend (pfm-client)
-A modern, responsive dashboard built for performance and professional aesthetics.
-- **Framework:** React 18 (Vite)
-- **Styling:** Tailwind CSS (Custom SaaS UI tokens, Glassmorphism)
-- **Charts:** Recharts (Area, Bar, and Pie distributions)
-- **Icons:** Lucide React
-- **Routing:** React Router DOM v6
-- **State Management:** React Context API (Auth & Global State)
+### 4. Running the Application
 
-### 3.2 Backend (pfm-server)
-An Express-based REST API handling authentication, transaction logging, and ML orchestration.
-- **Language:** Node.js
-- **Framework:** Express.js
-- **Security:** JWT (JSON Web Tokens), Bcrypt.js (Password Hashing)
-- **File Handling:** Multer (for CSV imports)
-- **CORS:** Configured for cross-origin local development
+To run the full app locally, you need to start all three services separately. We recommend using 3 terminal windows in VS Code.
 
-### 3.3 Database (`db.json`)
-For simplicity and zero-configuration local portability, the system uses a persistent JSON-based storage layer.
-- **Persistence:** Local file system sync on every write.
-- **Schema:**
-  - `users`: `{ _id, name, email, password }`
-  - `transactions`: `{ _id, user, amount, category, date, prediction, riskScore, confidenceScore }`
+- **Terminal 1 (Backend)**: `cd server && npm run dev`
+- **Terminal 2 (Frontend)**: `cd client && npm run dev`
+- **Terminal 3 (ML Service)**: `cd ml-service && python main.py`
 
-### 3.4 ML Service (ml-service)
-A high-performance Python-based inference engine.
-- **Framework:** FastAPI
-- **Data Analysis:** Pandas, Numpy
-- **ML Models:** 
-  - `Scikit-Learn`
-  - **Isolation Forest:** Primary unsupervised anomaly detection.
-  - **Random Forest:** Secondary probability-based risk classifier.
-- **Standardization:** `StandardScaler` & `LabelEncoder`.
+Once started, the application will be available at: **`http://localhost:5173`**
 
 ---
 
-## 4. ML Logic & Risk Assessment
+## 🌍 Production Deployment
 
-### Dual-Layer Detection Layer
-To ensure 100% reliability, the system employs a **Layered Logic** approach:
+This project is optimized for deployment on **Vercel**.
 
-1. **Heuristic Model (Node.js):** 
-   - Flags absolute outliers instantly (e.g., Transactions > $500).
-   - Serves as a fallback if the Python service is offline.
-2. **Probabilistic AI (Python):** 
-   - Dynamically learns user patterns from uploaded CVS history.
-   - Calculates a risk score (0-100%) based on isolation scores.
-
-### Classification Matrix
-- **0 - 50%:** **Normal** (Standard behavior)
-- **51 - 100%:** **Risky** (Potential leakage / anomalous spike)
+1. Connect your GitHub repository to Vercel.
+2. Vercel will automatically detect the `vercel.json` configuration.
+3. It will deploy the React app as static, the Node server as Serverless Functions, and the ML logic as Python Serverless Functions.
 
 ---
 
-## 5. Security & Privacy
-- **Stateless Auth:** All requests to the backend are protected by Bearer tokens.
-- **Sensitive Data:** Transaction data is evaluated by the AI but never sold or exported to external third-party cloud analytics.
-- **Encryption:** Passwords are never stored in plain text; Bcrypt salts and hashes all credentials.
-
----
-
-## 6. Implementation Roadmap
-- [x] **Phase 1:** Core Authentication & Dashboard.
-- [x] **Phase 2:** Integration of FastAPI ML Service.
-- [x] **Phase 3:** Full UI/UX Overhaul (SaaS Style).
-- [x] **Phase 4:** Heuristic Fallback & Dual-Layer Logic.
-- [x] **Current State:** Fully functional, localized deployment ready.
-
----
-> [!NOTE]
-> This documentation is generated dynamically based on the current implementation state of the PFM AI Project as of Apr 2026.
+## 📝 License
+This project is licensed under the MIT License. Developed for Personal Financial Modeling and AI Research.

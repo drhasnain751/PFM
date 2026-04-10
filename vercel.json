@@ -18,35 +18,19 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "server/src/index.js"
+      "destination": "/server/src/index.js"
     },
     {
       "source": "/ml/(.*)",
-      "destination": "ml-service/main.py"
+      "destination": "/ml-service/main.py"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "server/src/index.js"
+      "destination": "/server/src/index.js"
     },
     {
-      "source": "/dashboard/(.*)",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/settings",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/reports",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/upload",
-      "destination": "/client/index.html"
-    },
-    {
-      "source": "/((?!api|ml|uploads|client).*)",
-      "destination": "/client/$1"
+      "source": "/((?!api|ml|uploads).*)",
+      "destination": "/index.html"
     }
   ],
   "cleanUrls": true

@@ -20,6 +20,9 @@ import Overview from './pages/dashboard/Overview';
 import UploadData from './pages/dashboard/UploadData';
 import ReportsPage from './pages/dashboard/ReportsPage';
 import AlertsPage from './pages/dashboard/AlertsPage';
+import BudgetPage from './pages/dashboard/BudgetPage';
+import GoalsPage from './pages/dashboard/GoalsPage';
+import InsightsPage from './pages/dashboard/InsightsPage';
 import SettingsPage from './pages/dashboard/SettingsPage';
 
 const ProtectedRoute = ({ children }) => {
@@ -55,6 +58,9 @@ const AppContent = () => {
         <Route path="/dashboard/upload" element={<ProtectedRoute><UploadData /></ProtectedRoute>} />
         <Route path="/dashboard/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
         <Route path="/dashboard/alerts" element={<ProtectedRoute><AlertsPage /></ProtectedRoute>} />
+        <Route path="/dashboard/budgets" element={<ProtectedRoute><BudgetPage /></ProtectedRoute>} />
+        <Route path="/dashboard/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
+        <Route path="/dashboard/insights" element={<ProtectedRoute><InsightsPage /></ProtectedRoute>} />
         <Route path="/dashboard/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
 
         {/* Catch All */}

@@ -8,7 +8,10 @@ import {
   Settings, 
   LogOut,
   Shield,
-  X
+  X,
+  Wallet,
+  Target,
+  Zap
 } from 'lucide-react';
 
 export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
@@ -16,8 +19,11 @@ export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+    { icon: Wallet, label: 'Budgets', path: '/dashboard/budgets' },
     { icon: Upload, label: 'Upload Data', path: '/dashboard/upload' },
     { icon: BarChart3, label: 'Reports', path: '/dashboard/reports' },
+    { icon: Target, label: 'Goals', path: '/dashboard/goals' },
+    { icon: Zap, label: 'Insights', path: '/dashboard/insights' },
     { icon: AlertCircle, label: 'Alerts', path: '/dashboard/alerts' },
     { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
   ];
@@ -41,8 +47,8 @@ export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
         ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div className="flex flex-col h-full h-screen">
-          <div className="p-6 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
+          <div className="p-6 flex items-center justify-between border-b border-indigo-500/10">
+            <Link to="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
                 <Shield className="w-5 h-5 text-white" />
               </div>
@@ -50,22 +56,27 @@ export default function Sidebar({ isOpen, setIsOpen, logoutContext }) {
             </Link>
             <button 
               onClick={() => setIsOpen(false)}
-              className="md:hidden text-slate-400 hover:text-white"
+              className="md:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5"
             >
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6 shadow-[0_0_10px_rgba(255,255,255,0.1)]" />
             </button>
           </div>
 
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto no-scrollbar">
+          <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto no-scrollbar">
             {menuItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.path}
-                className={isActive(item.path) ? 'sidebar-link-active' : 'sidebar-link'}
+                className={`
+                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
+                  ${isActive(item.path) 
+                    ? 'bg-indigo-600/10 text-indigo-400 font-bold border border-indigo-600/20' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'}
+                `}
                 onClick={() => setIsOpen(false)}
               >
-                <item.icon className="w-5 h-5" />
-                <span>{item.label}</span>
+                <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-indigo-400' : 'text-slate-400 group-hover:text-white'}`} />
+                <span className="text-sm">{item.label}</span>
               </Link>
             ))}
           </nav>

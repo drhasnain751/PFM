@@ -8,7 +8,10 @@ import {
   TrendingUp, 
   CreditCard, 
   PieChart as PieIcon,
-  ArrowRight
+  ArrowRight,
+  Target,
+  Zap,
+  Wallet
 } from 'lucide-react';
 import TransactionModal from '../../components/TransactionModal';
 import { 
@@ -73,6 +76,20 @@ export default function Overview() {
     }, {})
   ).map(([date, amount]) => ({ date, amount })).reverse().slice(-7);
 
+  // Dummy data for new sections
+  const BUDGET_LIMIT = 2000;
+  const budgetUtilization = (monthlySpending / BUDGET_LIMIT) * 100;
+  
+  const GOAL_TARGET = 5000;
+  const currentSavings = 1250;
+  const goalProgress = (currentSavings / GOAL_TARGET) * 100;
+
+  const insights = [
+    { text: "Your Dining spend is 15% higher than last week.", type: "warning" },
+    { text: "Potential $40 saving identified in 'Subscriptions'.", type: "info" },
+    { text: "You've reached 25% of your 'Emergency Fund' goal!", type: "success" }
+  ];
+
   if (loading) {
     return (
       <div className="h-full flex flex-col items-center justify-center py-20">
@@ -104,7 +121,7 @@ export default function Overview() {
           { label: 'Total Spending', value: `$${totalSpending.toFixed(2)}`, icon: CreditCard, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
           { label: 'Monthly Spending', value: `$${monthlySpending.toFixed(2)}`, icon: TrendingUp, color: 'text-purple-400', bg: 'bg-purple-400/10' },
           { label: 'Leakage Risk Score', value: `${avgRiskScore.toFixed(1)}%`, icon: AlertTriangle, color: 'text-rose-400', bg: 'bg-rose-400/10' },
-          { label: 'Spending Groups', value: `${chartData.length}`, icon: PieIcon, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+          { label: 'Active Goals', value: `2`, icon: Target, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
         ].map((stat, i) => (
           <div key={i} className="glass-panel p-6">
             <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center mb-4`}>
@@ -117,6 +134,71 @@ export default function Overview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Quick Insights Row */}
+        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+           {insights.map((insight, i) => (
+             <div key={i} className="glass-panel p-4 flex items-center gap-4 bg-indigo-500/5 border-indigo-500/10 group hover:border-indigo-500/30 transition-all cursor-default">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                  insight.type === 'warning' ? 'bg-amber-500/10 text-amber-500' :
+                  insight.type === 'success' ? 'bg-emerald-500/10 text-emerald-500' :
+                  'bg-indigo-500/10 text-indigo-500'
+                }`}>
+                   <Zap className="w-5 h-5" />
+                </div>
+                <p className="text-sm font-medium text-slate-300">{insight.text}</p>
+             </div>
+           ))}
+        </div>
+
+        {/* Budget & Goals Column */}
+        <div className="space-y-8">
+           <div className="glass-panel p-8">
+              <div className="flex items-center justify-between mb-6">
+                 <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Wallet className="w-5 h-5 text-indigo-500" />
+                    Monthly Budget
+                 </h3>
+                 <span className="text-xs font-bold text-slate-500">${monthlySpending.toFixed(0)} / ${BUDGET_LIMIT}</span>
+              </div>
+              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden mb-4">
+                 <div 
+                   className={`h-full transition-all duration-1000 ${budgetUtilization > 90 ? 'bg-rose-500' : 'bg-indigo-500'}`}
+                   style={{ width: `${Math.min(budgetUtilization, 100)}%` }}
+                 />
+              </div>
+              <p className="text-xs text-slate-500">
+                {budgetUtilization > 90 ? 'Careful! You are almost at your limit.' : 'You have $750.00 left for the month.'}
+              </p>
+           </div>
+
+           <div className="glass-panel p-8 bg-gradient-to-br from-emerald-500/5 to-transparent border-emerald-500/10">
+              <div className="flex items-center justify-between mb-6">
+                 <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Target className="w-5 h-5 text-emerald-500" />
+                    Savings Goal
+                 </h3>
+                 <span className="text-xs font-bold text-emerald-500">{goalProgress.toFixed(0)}%</span>
+              </div>
+              <p className="text-sm font-bold text-white mb-2">Emergency Fund</p>
+              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden mb-6">
+                 <div 
+                   className="h-full bg-emerald-500 transition-all duration-1000"
+                   style={{ width: `${goalProgress}%` }}
+                 />
+              </div>
+              <div className="flex justify-between items-end">
+                 <div>
+                    <p className="text-[10px] text-slate-500 uppercase font-black">Current</p>
+                    <p className="text-lg font-bold text-emerald-400">${currentSavings}</p>
+                 </div>
+                 <div className="text-right">
+                    <p className="text-[10px] text-slate-500 uppercase font-black">Target</p>
+                    <p className="text-sm font-bold text-slate-300">$${GOAL_TARGET}</p>
+                 </div>
+              </div>
+           </div>
+        </div>
+
         {/* Main Spending Trend */}
         <div className="lg:col-span-2 glass-panel p-8">
           <div className="flex items-center justify-between mb-8">

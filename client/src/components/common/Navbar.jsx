@@ -62,35 +62,33 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Nav */}
-      {isOpen && (
-        <div className="md:hidden bg-slate-900 border-b border-white/5 animate-in slide-in-from-top duration-300">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="block px-3 py-2 text-base font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <div className="pt-4 pb-1 border-t border-white/5 mx-3">
-              {user ? (
-                <div className="flex flex-col gap-2 pt-2">
-                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="btn-outline justify-center">Dashboard</Link>
-                  <button onClick={() => { logoutContext(); setIsOpen(false); }} className="btn-outline justify-center">Logout</button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2 pt-2">
-                  <Link to="/login" onClick={() => setIsOpen(false)} className="btn-outline justify-center">Login</Link>
-                  <Link to="/signup" onClick={() => setIsOpen(false)} className="btn-primary justify-center">Get Started</Link>
-                </div>
-              )}
-            </div>
+      <div className={`md:hidden fixed inset-x-0 top-20 bottom-0 z-[60] bg-slate-900 transition-all duration-300 ease-in-out ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}`}>
+        <div className="px-4 pt-4 pb-8 space-y-4 overflow-y-auto h-full">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className="block px-4 py-3 text-lg font-bold text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              {link.name}
+            </Link>
+          ))}
+          <div className="pt-6 mt-6 border-t border-white/10 space-y-4 px-2">
+            {user ? (
+              <>
+                <Link to="/dashboard" onClick={() => setIsOpen(false)} className="btn-outline w-full justify-center py-4">Dashboard Overview</Link>
+                <button onClick={() => { logoutContext(); setIsOpen(false); }} className="btn-outline w-full justify-center py-4 text-rose-400 border-rose-400/20">Logout</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={() => setIsOpen(false)} className="nav-link text-center block text-lg font-bold py-2">Login</Link>
+                <Link to="/signup" onClick={() => setIsOpen(false)} className="btn-primary w-full justify-center py-4 text-lg">Get Started Now</Link>
+              </>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 }
